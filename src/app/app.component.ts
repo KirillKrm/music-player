@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, ViewChild } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
 
 @Component({
@@ -9,17 +9,23 @@ import { RouterOutlet } from '@angular/router'
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  audio = new Audio()
-  volume = 1
+  isPlay = false
 
-  playSound() {
-    this.audio.src = '../assets/thepower.wav'
-    this.audio.load()
-    this.audio.play()
+  playSound(audioRef: HTMLAudioElement) {
+    if (this.isPlay) {
+      audioRef.pause()
+    } else {
+      audioRef.play()
+    }
+
+    this.isPlay = !this.isPlay
   }
 
-  changeVolume(value: string) {
-    this.volume = Number(value) / 100
-    this.audio.volume = this.volume
+  changeVolume(audioRef: HTMLAudioElement, volumeRef: HTMLInputElement) {
+    audioRef.volume = Number(volumeRef.value) / 100
+  }
+
+  updateProgress(audioRef: HTMLAudioElement, progressRef: HTMLProgressElement) {
+    progressRef.value = audioRef.currentTime / audioRef.duration
   }
 }

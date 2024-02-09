@@ -1,11 +1,24 @@
-<main>
-  <button type="button" class="playButton" (click)="playSound()">Play</button>
+<main class="player">
+  <audio
+    #audioRef
+    src="../assets/thepower.wav"
+    (timeupdate)="updateProgress(audioRef, progressRef)"
+  ></audio>
+  <progress class="player__progress" #progressRef max="1"></progress>
+  <button
+    type="button"
+    class="player__play-button"
+    (click)="playSound(audioRef)"
+  >
+    Play
+  </button>
   <input
     type="range"
     value="100"
-    #ref
-    (input)="changeVolume(ref.value)"
-    (change)="changeVolume(ref.value)"
+    #volumeRef
+    (input)="changeVolume(audioRef, volumeRef)"
+    (change)="changeVolume(audioRef, volumeRef)"
   />
-  <span>{{ this.volume }}</span>
+  <span>{{ audioRef.volume }}</span>
+  <input type="file" accept="audio/*" />
 </main>
