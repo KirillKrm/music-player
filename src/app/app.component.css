@@ -1,5 +1,11 @@
-.player {
-  @apply flex w-80 flex-col gap-2 p-4;
+.main {
+  @apply flex h-full w-full flex-col items-center justify-center;
+}
+.main__visualizer {
+  @apply flex h-[100px] w-[500px];
+}
+.main__player {
+  @apply flex w-80 flex-col gap-2  p-4;
 }
 .player__progress {
   @apply w-full;

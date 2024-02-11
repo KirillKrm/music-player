@@ -1,29 +1,32 @@
-<main class="player">
-  <audio
-    #audioRef
-    src="{{ this.fileUrl }}"
-    (timeupdate)="onUpdateProgress(audioRef, progressRef)"
-  ></audio>
-  <progress class="player__progress" #progressRef max="1"></progress>
-  <button
-    type="button"
-    class="player__play-button"
-    (click)="playSound(audioRef)"
-  >
-    Play
-  </button>
-  <input
-    type="range"
-    value="100"
-    #volumeRef
-    (input)="onChangeVolume(audioRef, volumeRef)"
-    (change)="onChangeVolume(audioRef, volumeRef)"
-  />
-  <span>{{ audioRef.volume }}</span>
-  <input
-    type="file"
-    accept="audio/*"
-    #fileRef
-    (change)="onFileSelected(fileRef)"
-  />
+<main class="main">
+  <canvas #visualizerRef class="main__visualizer"></canvas>
+  <section class="main__player">
+    <audio
+      #audioRef
+      src="{{ this.fileUrl }}"
+      (timeupdate)="onUpdateProgress(audioRef, progressRef)"
+    ></audio>
+    <progress #progressRef class="player__progress" max="1"></progress>
+    <button
+      type="button"
+      class="player__play-button"
+      (click)="playSound(audioRef)"
+    >
+      Play
+    </button>
+    <input
+      type="range"
+      value="100"
+      #volumeRef
+      (input)="onChangeVolume(audioRef, volumeRef)"
+      (change)="onChangeVolume(audioRef, volumeRef)"
+    />
+    <span>{{ audioRef.volume }}</span>
+    <input
+      type="file"
+      accept="audio/*"
+      #fileRef
+      (change)="onFileSelected(fileRef)"
+    />
+  </section>
 </main>
