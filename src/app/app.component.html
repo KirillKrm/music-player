@@ -1,8 +1,8 @@
 <main class="player">
   <audio
     #audioRef
-    src="../assets/thepower.wav"
-    (timeupdate)="updateProgress(audioRef, progressRef)"
+    src="{{ this.fileUrl }}"
+    (timeupdate)="onUpdateProgress(audioRef, progressRef)"
   ></audio>
   <progress class="player__progress" #progressRef max="1"></progress>
   <button
@@ -16,9 +16,14 @@
     type="range"
     value="100"
     #volumeRef
-    (input)="changeVolume(audioRef, volumeRef)"
-    (change)="changeVolume(audioRef, volumeRef)"
+    (input)="onChangeVolume(audioRef, volumeRef)"
+    (change)="onChangeVolume(audioRef, volumeRef)"
   />
   <span>{{ audioRef.volume }}</span>
-  <input type="file" accept="audio/*" />
+  <input
+    type="file"
+    accept="audio/*"
+    #fileRef
+    (change)="onFileSelected(fileRef)"
+  />
 </main>

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core'
+import { Component } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
 
 @Component({
@@ -9,23 +9,33 @@ import { RouterOutlet } from '@angular/router'
   styleUrl: './app.component.css',
 })
 export class AppComponent {
+  fileUrl = ''
   isPlay = false
 
   playSound(audioRef: HTMLAudioElement) {
-    if (this.isPlay) {
-      audioRef.pause()
-    } else {
-      audioRef.play()
+    if (this.fileUrl) {
+      if (this.isPlay) {
+        audioRef.pause()
+      } else {
+        audioRef.play()
+      }
+      this.isPlay = !this.isPlay
     }
-
-    this.isPlay = !this.isPlay
   }
 
-  changeVolume(audioRef: HTMLAudioElement, volumeRef: HTMLInputElement) {
+  onChangeVolume(audioRef: HTMLAudioElement, volumeRef: HTMLInputElement) {
     audioRef.volume = Number(volumeRef.value) / 100
   }
 
-  updateProgress(audioRef: HTMLAudioElement, progressRef: HTMLProgressElement) {
-    progressRef.value = audioRef.currentTime / audioRef.duration
+  onUpdateProgress(
+    audioRef: HTMLAudioElement,
+    progressRef: HTMLProgressElement,
+  ) {
+    const currentProgress = audioRef.currentTime / audioRef.duration
+    if (isFinite(currentProgress)) progressRef.value = currentProgress
+  }
+
+  onFileSelected(fileRef: HTMLInputElement) {
+    if (fileRef.files) this.fileUrl = URL.createObjectURL(fileRef.files[0])
   }
 }
