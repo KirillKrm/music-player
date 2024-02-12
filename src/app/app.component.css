@@ -1,24 +1,48 @@
 .main {
-  @apply flex h-full w-full flex-col items-center justify-center;
+  @apply flex h-full w-full justify-center bg-black py-2;
 }
-.main__visualizer {
-  @apply flex h-[100px] w-[500px];
+
+.main__section {
+  @apply flex h-full w-1/2 flex-col rounded-lg bg-[#121212] p-4;
 }
+.section__visualizer {
+  @apply flex h-1/2 items-center justify-center;
+}
+.visualizer__canvas {
+}
+
 .main__player {
-  @apply flex w-80 flex-col gap-2  p-4;
+  @apply relative flex h-1/2 w-full flex-col gap-2 pt-4;
 }
 .player__progress {
-  @apply w-full;
+  @apply flex flex-col text-white;
 }
-.player__progress::-webkit-progress-bar {
-  @apply bg-gray-400;
+.progress__bar {
+  @apply h-1 w-full;
 }
-.player__progress::-webkit-progress-value {
-  @apply bg-sky-700;
+.progress__bar::-webkit-progress-bar {
+  @apply rounded-full bg-white;
 }
-.player__progress::-moz-progress-bar {
-  @apply bg-gray-400;
+.progress__bar::-webkit-progress-value {
+  @apply rounded-full bg-[#0075ff];
 }
-.player__play-button {
-  @apply bg-sky-700 px-4 py-2 text-white hover:bg-sky-800 sm:px-8 sm:py-3;
+.progress__time {
+  @apply flex justify-between;
+}
+.player__control {
+  @apply flex flex-col items-center justify-center gap-8;
+}
+.control__play-button {
+  @apply flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-black hover:bg-gray-100;
+}
+.control__volume {
+  @apply h-1;
+}
+.control__volume::-webkit-slider-runnable-track {
+}
+.control__volume::-webkit-slider-thumb {
+}
+
+.player__file-input {
+  @apply absolute bottom-0 self-center rounded-full bg-[#242424] px-5 py-2  text-white;
 }
