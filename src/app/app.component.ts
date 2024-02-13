@@ -27,17 +27,18 @@ export class AppComponent implements AfterViewInit {
     audioSource.connect(audioContext.destination)
     audioSource.connect(analyser)
 
-    analyser.fftSize = 256
+    //analyser.fftSize = 256
 
     const canvasCtx = this.visualizerRef.nativeElement.getContext('2d')
-    const bufferLength = analyser.frequencyBinCount
-    const dataArray = new Uint8Array(bufferLength)
+    //const bufferLength = analyser.frequencyBinCount
+    const dataArray = new Uint8Array(analyser.frequencyBinCount)
 
     const WIDTH = this.visualizerRef.nativeElement.width
     const HEIGHT = this.visualizerRef.nativeElement.height
 
-    const barWidth = WIDTH / bufferLength
-    const angle_step = (Math.PI * 2) / bufferLength
+    const barWidth = 3 // WIDTH / bufferLength
+    const barCount = 50
+    const angle_step = Math.PI / barCount
 
     function renderFrame() {
       requestAnimationFrame(renderFrame)
@@ -50,25 +51,43 @@ export class AppComponent implements AfterViewInit {
       const centerX = WIDTH / 2
       const centerY = HEIGHT / 2
 
-      const radius = 20
+      const radius = 100
 
-      for (let i = 0; i < bufferLength; i++) {
-        const barHeight = dataArray[i] * 0.5
-        const angle = i * angle_step
+      //Circle
+      canvasCtx!.strokeStyle = '#ffffff'
+      canvasCtx!.lineWidth = 3
+      canvasCtx!.beginPath()
+      canvasCtx!.arc(centerX, centerY, radius, 0, 2 * Math.PI)
+      canvasCtx!.stroke()
 
-        const x = centerX + radius * Math.cos(angle)
-        const y = centerY + radius * Math.sin(angle)
+      //Bars
+      for (let i = 0; i < barCount + 1; i++) {
+        const barHeight = dataArray[i] * 0.4
+        const anglePos = i * angle_step - Math.PI / 2
+        const angleNeg = -i * angle_step - Math.PI / 2
 
-        const xEnd = centerX + Math.cos(angle) * (radius + barHeight)
-        const yEnd = centerY + Math.sin(angle) * (radius + barHeight)
+        const xPos1 = centerX + radius * Math.cos(anglePos)
+        const yPos1 = centerY + radius * Math.sin(anglePos)
+        const xPos2 = centerX + Math.cos(anglePos) * (radius + barHeight)
+        const yPos2 = centerY + Math.sin(anglePos) * (radius + barHeight)
+
+        const xNeg1 = centerX + radius * Math.cos(angleNeg)
+        const yNeg1 = centerY + radius * Math.sin(angleNeg)
+        const xNeg2 = centerX + Math.cos(angleNeg) * (radius + barHeight)
+        const yNeg2 = centerY + Math.sin(angleNeg) * (radius + barHeight)
+
+        const barColor =
+          'rgb(' + 200 + ', ' + (200 - dataArray[i]) + ', ' + dataArray[i] + ')'
 
         // canvasCtx!.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)'
 
-        canvasCtx!.strokeStyle = '#ffffff'
+        canvasCtx!.strokeStyle = barColor
         canvasCtx!.lineWidth = barWidth
         canvasCtx!.beginPath()
-        canvasCtx!.moveTo(x, y)
-        canvasCtx!.lineTo(xEnd, yEnd)
+        canvasCtx!.moveTo(xPos1, yPos1)
+        canvasCtx!.lineTo(xPos2, yPos2)
+        canvasCtx!.moveTo(xNeg1, yNeg1)
+        canvasCtx!.lineTo(xNeg2, yNeg2)
         canvasCtx!.stroke()
       }
     }
