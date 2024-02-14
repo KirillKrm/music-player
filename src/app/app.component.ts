@@ -54,11 +54,26 @@ export class AppComponent implements AfterViewInit {
       const radius = 100
 
       //Circle
-      canvasCtx!.strokeStyle = '#ffffff'
-      canvasCtx!.lineWidth = 3
+      canvasCtx!.strokeStyle = '#fff'
+      canvasCtx!.lineWidth = barWidth
       canvasCtx!.beginPath()
       canvasCtx!.arc(centerX, centerY, radius, 0, 2 * Math.PI)
       canvasCtx!.stroke()
+
+      //Gradient
+      const gradient = canvasCtx!.createConicGradient(
+        1.5 * Math.PI,
+        centerX,
+        centerY,
+      )
+      gradient.addColorStop(0, 'red')
+      gradient.addColorStop(1 / 7, 'orange')
+      gradient.addColorStop(2 / 7, 'yellow')
+      gradient.addColorStop(3 / 7, 'green')
+      gradient.addColorStop(4 / 7, 'skyblue')
+      gradient.addColorStop(5 / 7, 'blue')
+      gradient.addColorStop(6 / 7, 'violet')
+      gradient.addColorStop(1, 'red')
 
       //Bars
       for (let i = 0; i < barCount + 1; i++) {
@@ -66,22 +81,26 @@ export class AppComponent implements AfterViewInit {
         const anglePos = i * angle_step - Math.PI / 2
         const angleNeg = -i * angle_step - Math.PI / 2
 
-        const xPos1 = centerX + radius * Math.cos(anglePos)
-        const yPos1 = centerY + radius * Math.sin(anglePos)
-        const xPos2 = centerX + Math.cos(anglePos) * (radius + barHeight)
-        const yPos2 = centerY + Math.sin(anglePos) * (radius + barHeight)
+        const xPos1 = centerX + (radius + barWidth) * Math.cos(anglePos)
+        const yPos1 = centerY + (radius + barWidth) * Math.sin(anglePos)
+        const xPos2 =
+          centerX + Math.cos(anglePos) * (radius + barHeight + barWidth)
+        const yPos2 =
+          centerY + Math.sin(anglePos) * (radius + barHeight + barWidth)
 
-        const xNeg1 = centerX + radius * Math.cos(angleNeg)
-        const yNeg1 = centerY + radius * Math.sin(angleNeg)
-        const xNeg2 = centerX + Math.cos(angleNeg) * (radius + barHeight)
-        const yNeg2 = centerY + Math.sin(angleNeg) * (radius + barHeight)
+        const xNeg1 = centerX + (radius + barWidth) * Math.cos(angleNeg)
+        const yNeg1 = centerY + (radius + barWidth) * Math.sin(angleNeg)
+        const xNeg2 =
+          centerX + Math.cos(angleNeg) * (radius + barHeight + barWidth)
+        const yNeg2 =
+          centerY + Math.sin(angleNeg) * (radius + barHeight + barWidth)
 
         const barColor =
           'rgb(' + 200 + ', ' + (200 - dataArray[i]) + ', ' + dataArray[i] + ')'
 
         // canvasCtx!.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)'
 
-        canvasCtx!.strokeStyle = barColor
+        canvasCtx!.strokeStyle = gradient
         canvasCtx!.lineWidth = barWidth
         canvasCtx!.beginPath()
         canvasCtx!.moveTo(xPos1, yPos1)
