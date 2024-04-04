@@ -13,38 +13,59 @@
         #audioRef
         src="{{ this.fileUrl }}"
         (timeupdate)="onUpdateProgress(audioRef, progressRef)"
+        (ended)="this.isPlay = false; audioRef.currentTime = 0"
       ></audio>
       <div class="player__progress">
-        <progress #progressRef class="progress__bar" max="1"></progress>
+        <input
+          type="range"
+          #progressRef
+          class="progress__bar"
+          defaultValue="0"
+          [max]="duration"
+          (input)="seekTo(audioRef, progressRef)"
+        />
         <div class="progress__time">
-          <span>{{ this.currentTime }} </span>
-          <span>{{ this.duration }}</span>
+          <span>{{ this.formatTime(this.currentTime) }} </span>
+          <span>{{ this.formatTime(this.duration) }}</span>
         </div>
       </div>
       <div class="player__control">
-        <button
-          type="button"
-          class="control__play-button"
-          (click)="playSound(audioRef)"
-        >
-          @if (this.isPlay) {
-            <svg viewBox="0 0 24 24" width="24" height="24">
-              <path d="M6 4h4v16H6zm8 0h4v16h-4z" />
-            </svg>
-          } @else {
-            <svg viewBox="0 0 24 24" width="24" height="24">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          }
-        </button>
-        <input
-          type="range"
-          value="100"
-          #volumeRef
-          class="control__volume"
-          (input)="onChangeVolume(audioRef, volumeRef)"
-          (change)="onChangeVolume(audioRef, volumeRef)"
-        />
+        <div class="control__buttons">
+          <button
+            type="button"
+            class="buttons__button-small"
+            (click)="stopSound(audioRef)"
+          >
+            <mat-icon>stop</mat-icon>
+          </button>
+          <button
+            type="button"
+            class="buttons__button-large"
+            (click)="playSound(audioRef)"
+          >
+            @if (this.isPlay) {
+              <mat-icon [className]="'scale-125'">pause</mat-icon>
+            } @else {
+              <mat-icon [className]="'scale-125'">play_arrow</mat-icon>
+            }
+          </button>
+          <button class="buttons__button-small" (click)="loopSound(audioRef)">
+            <mat-icon [ngStyle]="{ color: isLoop ? '#0075ff' : 'black' }"
+              >replay</mat-icon
+            >
+          </button>
+        </div>
+        <div class="control__volume">
+          <mat-icon [ngStyle]="{ color: 'white' }">volume_up</mat-icon>
+          <input
+            type="range"
+            value="100"
+            #volumeRef
+            class="volume__bar"
+            (input)="onChangeVolume(audioRef, volumeRef)"
+            (change)="onChangeVolume(audioRef, volumeRef)"
+          />
+        </div>
       </div>
       <input
         type="file"

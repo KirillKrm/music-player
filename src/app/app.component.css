@@ -1,48 +1,68 @@
 .main {
-  @apply flex h-full w-full justify-center bg-black py-2;
+  @apply flex h-full w-full justify-center bg-black;
+  @apply sm:py-4;
 }
 
 .main__section {
-  @apply flex h-full w-1/2 flex-col rounded-lg bg-[#121212] p-4;
+  @apply bg-primary flex h-full w-full flex-col p-6;
+  @apply sm:w-1/2 sm:min-w-min sm:rounded-xl sm:p-6;
 }
 .section__visualizer {
   @apply flex h-1/2 items-center justify-center;
 }
 .visualizer__canvas {
+  @apply h-full;
 }
 
 .main__player {
   @apply relative flex h-1/2 w-full flex-col gap-2 pt-4;
 }
+
 .player__progress {
   @apply flex flex-col text-white;
 }
+
 .progress__bar {
-  @apply h-1 w-full;
+  @apply mb-2 h-1 w-full;
 }
 .progress__bar::-webkit-progress-bar {
   @apply rounded-full bg-white;
 }
 .progress__bar::-webkit-progress-value {
-  @apply rounded-full bg-[#0075ff];
+  @apply bg-tertiary rounded-full;
 }
 .progress__time {
   @apply flex justify-between;
 }
+
 .player__control {
   @apply flex flex-col items-center justify-center gap-8;
 }
-.control__play-button {
-  @apply flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-black hover:bg-gray-100;
+
+.control__buttons {
+  @apply flex items-center gap-4;
 }
+.buttons__button-small {
+  @apply flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-black;
+  @apply duration-150 ease-in-out hover:scale-110 active:scale-100 active:duration-0;
+}
+.buttons__button-large {
+  @apply flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 text-black;
+  @apply duration-150 ease-in-out hover:scale-110 active:scale-100 active:duration-0;
+}
+
 .control__volume {
+  @apply flex items-center gap-1;
+}
+.volume__bar {
   @apply h-1;
-}
-.control__volume::-webkit-slider-runnable-track {
-}
-.control__volume::-webkit-slider-thumb {
 }
 
 .player__file-input {
-  @apply absolute bottom-0 self-center rounded-full bg-[#242424] px-5 py-2  text-white;
+  @apply bg-secondary absolute bottom-0 w-full self-center rounded-full p-2 text-white;
+  @apply hover:cursor-pointer sm:w-full sm:max-w-fit;
+}
+
+.player__file-input::file-selector-button {
+  @apply rounded-full border-none hover:cursor-pointer;
 }

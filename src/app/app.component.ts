@@ -1,10 +1,13 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
+import { CommonModule } from '@angular/common'
+
+import { MatIconModule } from '@angular/material/icon'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, CommonModule, MatIconModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -12,10 +15,11 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('audioRef') audioRef!: ElementRef<HTMLMediaElement>
   @ViewChild('visualizerRef') visualizerRef!: ElementRef<HTMLCanvasElement>
 
-  public fileUrl = ''
-  public isPlay = false
-  public currentTime = '0:00'
-  public duration = '-:-'
+  public fileUrl: string = ''
+  public isPlay: boolean = false
+  public isLoop: boolean = false
+  public currentTime: number = 0
+  public duration: number = 0
 
   ngAfterViewInit() {
     const audioContext = new AudioContext()
@@ -95,8 +99,8 @@ export class AppComponent implements AfterViewInit {
         const yNeg2 =
           centerY + Math.sin(angleNeg) * (radius + barHeight + barWidth)
 
-        const barColor =
-          'rgb(' + 200 + ', ' + (200 - dataArray[i]) + ', ' + dataArray[i] + ')'
+        // const barColor =
+        //   'rgb(' + 200 + ', ' + (200 - dataArray[i]) + ', ' + dataArray[i] + ')'
 
         // canvasCtx!.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)'
 
@@ -114,6 +118,10 @@ export class AppComponent implements AfterViewInit {
     renderFrame()
   }
 
+  public onFileSelected(fileRef: HTMLInputElement) {
+    if (fileRef.files) this.fileUrl = URL.createObjectURL(fileRef.files[0])
+  }
+
   public playSound(audioRef: HTMLAudioElement) {
     if (this.fileUrl) {
       if (this.isPlay) {
@@ -125,6 +133,17 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
+  public stopSound(audioRef: HTMLAudioElement) {
+    audioRef.pause()
+    audioRef.currentTime = 0
+    this.isPlay = false
+  }
+
+  public loopSound(audioRef: HTMLAudioElement) {
+    this.isLoop = !this.isLoop
+    audioRef.loop = this.isLoop
+  }
+
   public onChangeVolume(
     audioRef: HTMLAudioElement,
     volumeRef: HTMLInputElement,
@@ -134,24 +153,28 @@ export class AppComponent implements AfterViewInit {
 
   public onUpdateProgress(
     audioRef: HTMLAudioElement,
-    progressRef: HTMLProgressElement,
+    progressRef: HTMLInputElement,
   ) {
-    const currentProgress = audioRef.currentTime / audioRef.duration
-    const currentMinutes = Math.floor(audioRef.currentTime / 60)
-    const currentSeconds = Math.floor(audioRef.currentTime % 60)
-    const durationMinutes = Math.floor(audioRef.duration / 60)
-    const durationSeconds = Math.floor(audioRef.duration % 60)
+    this.currentTime = audioRef.currentTime
+    this.duration = audioRef.duration
 
-    isFinite(currentProgress) ? (progressRef.value = currentProgress) : 0
-
-    this.currentTime = `${currentMinutes}:${currentSeconds < 10 ? '0' : ''}${currentSeconds}`
-
-    this.duration = isFinite(audioRef.duration)
-      ? `${durationMinutes}:${durationSeconds < 10 ? '0' : ''}${durationSeconds}`
-      : '-:-'
+    progressRef.value = this.currentTime.toString()
   }
 
-  public onFileSelected(fileRef: HTMLInputElement) {
-    if (fileRef.files) this.fileUrl = URL.createObjectURL(fileRef.files[0])
+  public seekTo(audioRef: HTMLAudioElement, progressRef: HTMLInputElement) {
+    audioRef.currentTime = Number(progressRef.value)
   }
+
+  public formatTime(time: number) {
+    if (time && !isNaN(time)) {
+      const minutes = Math.floor(time / 60)
+      const formatMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`
+      const seconds = Math.floor(time % 60)
+      const formatSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`
+      return `${formatMinutes}:${formatSeconds}`
+    }
+    return '00:00'
+  }
+
+  public onChangeProgress() {}
 }
