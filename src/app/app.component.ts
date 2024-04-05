@@ -14,12 +14,16 @@ import { MatIconModule } from '@angular/material/icon'
 export class AppComponent implements AfterViewInit {
   @ViewChild('audioRef') audioRef!: ElementRef<HTMLMediaElement>
   @ViewChild('visualizerRef') visualizerRef!: ElementRef<HTMLCanvasElement>
+  @ViewChild('progressRef') progressRef!: ElementRef<HTMLInputElement>
+  @ViewChild('volumeRef') volumeRef!: ElementRef<HTMLInputElement>
+  @ViewChild('fileInputRef') fileInputRef!: ElementRef<HTMLInputElement>
 
   public fileUrl: string = ''
   public isPlay: boolean = false
   public isLoop: boolean = false
   public currentTime: number = 0
   public duration: number = 0
+  public volume: number = 1
 
   ngAfterViewInit() {
     const audioContext = new AudioContext()
@@ -118,51 +122,67 @@ export class AppComponent implements AfterViewInit {
     renderFrame()
   }
 
-  public onFileSelected(fileRef: HTMLInputElement) {
-    if (fileRef.files) this.fileUrl = URL.createObjectURL(fileRef.files[0])
+  public onFileSelected() {
+    if (this.fileInputRef.nativeElement.files)
+      this.fileUrl = URL.createObjectURL(
+        this.fileInputRef.nativeElement.files[0],
+      )
   }
 
-  public playSound(audioRef: HTMLAudioElement) {
+  public playSound() {
     if (this.fileUrl) {
       if (this.isPlay) {
-        audioRef.pause()
+        this.audioRef.nativeElement.pause()
       } else {
-        audioRef.play()
+        this.audioRef.nativeElement.play()
       }
       this.isPlay = !this.isPlay
     }
   }
 
-  public stopSound(audioRef: HTMLAudioElement) {
-    audioRef.pause()
-    audioRef.currentTime = 0
+  public stopSound() {
+    this.audioRef.nativeElement.pause()
+    this.audioRef.nativeElement.currentTime = 0
     this.isPlay = false
   }
 
-  public loopSound(audioRef: HTMLAudioElement) {
+  public loopSound() {
     this.isLoop = !this.isLoop
-    audioRef.loop = this.isLoop
+    this.audioRef.nativeElement.loop = this.isLoop
   }
 
-  public onChangeVolume(
-    audioRef: HTMLAudioElement,
-    volumeRef: HTMLInputElement,
-  ) {
-    audioRef.volume = Number(volumeRef.value) / 100
+  public muteSound() {
+    if (Number(this.volumeRef.nativeElement.value)) {
+      this.volume = Number(this.volumeRef.nativeElement.value)
+      this.volumeRef.nativeElement.value = '0'
+    } else {
+      this.volumeRef.nativeElement.value = this.volume.toString()
+    }
+    this.onChangeVolume()
   }
 
-  public onUpdateProgress(
-    audioRef: HTMLAudioElement,
-    progressRef: HTMLInputElement,
-  ) {
-    this.currentTime = audioRef.currentTime
-    this.duration = audioRef.duration
-
-    progressRef.value = this.currentTime.toString()
+  public onChangeVolume() {
+    this.audioRef.nativeElement.volume = Number(
+      this.volumeRef.nativeElement.value,
+    )
   }
 
-  public seekTo(audioRef: HTMLAudioElement, progressRef: HTMLInputElement) {
-    audioRef.currentTime = Number(progressRef.value)
+  public onUpdateProgress() {
+    this.currentTime = this.audioRef.nativeElement.currentTime
+    this.duration = this.audioRef.nativeElement.duration
+
+    this.progressRef.nativeElement.value = this.currentTime.toString()
+  }
+
+  public onEnded() {
+    this.isPlay = false
+    this.audioRef.nativeElement.currentTime = 0
+  }
+
+  public seekTo() {
+    this.audioRef.nativeElement.currentTime = Number(
+      this.progressRef.nativeElement.value,
+    )
   }
 
   public formatTime(time: number) {
@@ -175,6 +195,4 @@ export class AppComponent implements AfterViewInit {
     }
     return '00:00'
   }
-
-  public onChangeProgress() {}
 }
