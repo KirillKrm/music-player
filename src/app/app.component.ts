@@ -18,6 +18,7 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('volumeRef') volumeRef!: ElementRef<HTMLInputElement>
   @ViewChild('fileInputRef') fileInputRef!: ElementRef<HTMLInputElement>
 
+  public audioContext!: AudioContext
   public fileUrl: string = ''
   public isPlay: boolean = false
   public isLoop: boolean = false
@@ -26,13 +27,14 @@ export class AppComponent implements AfterViewInit {
   public volume: number = 1
 
   ngAfterViewInit() {
-    const audioContext = new AudioContext()
-    const audioSource = audioContext.createMediaElementSource(
+    this.audioContext = new AudioContext()
+
+    const audioSource = this.audioContext.createMediaElementSource(
       this.audioRef.nativeElement,
     )
-    const analyser = audioContext.createAnalyser()
+    const analyser = this.audioContext.createAnalyser()
 
-    audioSource.connect(audioContext.destination)
+    audioSource.connect(this.audioContext.destination)
     audioSource.connect(analyser)
 
     //analyser.fftSize = 256
@@ -134,7 +136,9 @@ export class AppComponent implements AfterViewInit {
       if (this.isPlay) {
         this.audioRef.nativeElement.pause()
       } else {
-        this.audioRef.nativeElement.play()
+        this.audioContext.resume().then(() => {
+          this.audioRef.nativeElement.play()
+        })
       }
       this.isPlay = !this.isPlay
     }
