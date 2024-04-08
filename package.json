@@ -9,8 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist/music-player/browser"
+    "deploy": "ng deploy --base-href=/music-player/"
   },
   "private": true,
   "dependencies": {
@@ -40,6 +39,7 @@
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "6.19.0",
     "@typescript-eslint/parser": "6.19.0",
+    "angular-cli-ghpages": "^2.0.0-beta.2",
     "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
