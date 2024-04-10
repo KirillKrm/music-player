@@ -1,20 +1,20 @@
 .main {
-  @apply flex h-full w-full justify-center bg-black;
+  @apply flex min-h-screen w-full justify-center bg-black;
   @apply sm:py-4;
 }
 
 .main__section {
-  @apply flex h-full w-full flex-col bg-primary p-6;
+  @apply flex min-h-fit w-full flex-col bg-primary p-6;
   @apply sm:w-1/2 sm:min-w-min sm:rounded-xl sm:p-6;
 }
 .section__visualizer {
-  @apply flex h-1/2 items-center justify-center;
+  @apply flex h-1/2 min-h-fit items-center justify-center overflow-hidden;
 }
 .visualizer__canvas {
-  @apply w-full object-scale-down;
+  @apply object-scale-down;
 }
 
-.main__player {
+.section__player {
   @apply relative flex h-1/2 w-full flex-col gap-2 pt-4;
 }
 
